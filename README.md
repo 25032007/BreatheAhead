@@ -9,9 +9,9 @@
 
 **BreatheAhead** is a real-time **Municipal Digital Twin Control** platform built for urban authorities to monitor, forecast, and act on air quality data at a hyperlocal, ward level. Designed specifically for **Vadodara, Gujarat**, the platform integrates time-series forecasting, an intervention impact simulator, a ranked policy-intervention engine, Gemini-powered multilingual health advisories, and heuristic source attribution — all delivered through the **BreatheAhead Operations Center**, a premium dark-themed Streamlit dashboard.
 
-**🔗 GitHub Repo:** https://github.com/25032007/BreatheAhead
-**🚀 Live Demo:** https://breatheahead-dgq8r2ynqf2qmcnxbrhf7y.streamlit.app/
-**🎥 Demo Video:** _[add video link here]_
+- **🔗 GitHub Repo:** https://github.com/25032007/BreatheAhead
+- **🚀 Live Demo:** https://breatheahead-dgq8r2ynqf2qmcnxbrhf7y.streamlit.app/
+- **🎥 Demo Video:** _[add video link here]_
 
 ---
 
