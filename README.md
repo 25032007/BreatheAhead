@@ -1,13 +1,17 @@
-﻿# 💨 BreatheAhead — AI-Powered Urban Air Quality Operations Platform
+﻿# 💨 BreatheAhead — Municipal Digital Twin for Urban Air Quality Operations
 
-> **Proactive, ward-level air quality intelligence for Vadodara Municipal Corporation (VMC)**  
-> Forecast · Simulate · Advise · Attribute — all in one AI-driven control center.
+> **Proactive, ward-level air quality intelligence for Vadodara Municipal Corporation (VMC)**
+> Forecast · Simulate · Advise · Attribute — all in one AI-driven Operations Center.
 
 ---
 
 ## 🌐 Overview
 
-**BreatheAhead** is a real-time AI operations dashboard built for urban municipal authorities to monitor, forecast, and act on air quality data at a hyperlocal, ward level. Designed specifically for **Vadodara, Gujarat**, the platform integrates time-series forecasting, an intervention impact simulator, Gemini-powered multilingual health advisories, and heuristic source attribution — all delivered through a premium dark-themed Streamlit interface.
+**BreatheAhead** is a real-time **Municipal Digital Twin Control** platform built for urban authorities to monitor, forecast, and act on air quality data at a hyperlocal, ward level. Designed specifically for **Vadodara, Gujarat**, the platform integrates time-series forecasting, an intervention impact simulator, a ranked policy-intervention engine, Gemini-powered multilingual health advisories, and heuristic source attribution — all delivered through the **BreatheAhead Operations Center**, a premium dark-themed Streamlit dashboard.
+
+**🔗 GitHub Repo:** https://github.com/25032007/BreatheAhead
+**🚀 Live Demo:** https://breatheahead-dgq8r2ynqf2qmcnxbrhf7y.streamlit.app/
+**🎥 Demo Video:** _[add video link here]_
 
 ---
 
@@ -15,10 +19,11 @@
 
 | Module | Description |
 |---|---|
-| 🗺️ **Live AQI Map** | Interactive Folium heatmap of AQI readings across Vadodara wards |
-| 🤖 **AI Forecast (Prophet)** | 72-hour AQI prediction using Meta's Prophet time-series model |
-| ⚗️ **Intervention Simulator** | Policy "what-if" tool — tune traffic, construction & industry levers and see simulated AQI delta |
-| 💬 **Health Advisory (Gemini)** | Gemini-generated bilingual (English + Gujarati) citizen advisories and formal municipal enforcement notices |
+| 🗺️ **Live AQI Map** | Interactive Folium heatmap of AQI readings across Vadodara wards, with AI Spatial Dispatch recommendations near critical exposure targets (hospitals, campuses, parks) |
+| 🤖 **AI Forecast (Prophet)** | 72-hour AQI prediction using Meta's Prophet time-series model, benchmarked against a persistence baseline |
+| ⚗️ **Intervention Simulator** | Policy "what-if" tool — tune traffic, construction, industry, and green-cover levers and see simulated AQI delta, estimated dust abatement, and health exposure risk |
+| 📋 **Ranked Policy Interventions** | Auto-ranked municipal action plan (e.g. dust suppression, signal optimization, flue-gas control) scored by AQI impact, cost tier, and confidence, tagged to the responsible department |
+| 💬 **Health Advisory (AI Coordinator Console)** | Gemini-powered bilingual (English + Gujarati) citizen advisories and formal municipal enforcement notices, presented as a live administrator ↔ AI assistant conversation |
 | 🔍 **Source Attribution** | Proximity-heuristic scoring to identify the dominant pollution source per ward (traffic / construction / industrial) |
 | ⚙️ **Settings Console** | Configure Gemini API endpoint, model version, temperature, and alert webhooks |
 
@@ -42,7 +47,7 @@ BreatheAhead/
 │   └── attribution_output.json     # Latest source attribution result
 ├── models/                     # (Reserved for serialized model artifacts)
 ├── docs/                       # (Reserved for extended documentation)
-├── demo/                       # (Reserved for demo screenshots / recordings)
+├── demo/                       # Demo screenshots
 ├── ppt/                        # Presentation materials
 └── requirements.txt
 ```
@@ -63,34 +68,60 @@ BreatheAhead/
   - 🏗️ **Construction Mitigation** (%)
   - 🏭 **Industrial Reduction** (%)
   - 🌿 **Green Cover Increase** (%)
-- Computes combined simulated AQI curve vs baseline, rendered as an interactive **Plotly** chart
+- Computes combined simulated AQI curve vs baseline, rendered as an interactive **Plotly** chart (Peak AQI Delta, Est. Environmental Dust Abatement, Health Exposure Risk)
 - Quantifies estimated "lives protected" and "hospitalizations prevented" from reduction scenarios
 
-### 3. Health Advisory — `advisory_gemini.py`
+### 3. Ranked Policy Interventions — `app.py`
+- Surfaces a prioritized list of municipal actions (e.g. Construction Site Dust Suppression, Smart Traffic Signal Optimization, Industrial Flue Gas Mitigation Control)
+- Each entry is scored on **AQI impact, cost tier, and model confidence**, and tagged to the responsible department (VMC Environment Dept, VMC Traffic Police, GPCB Regulatory Board)
+- Includes a "Simulate Abatement" action per intervention
+
+### 4. Health Advisory — `advisory_gemini.py`
 - Calls the **Gemini REST API** (`gemini-2.0-flash` and fallbacks) with a structured ward-level prompt
 - Returns three structured outputs:
   - `EN_ADVISORY` — English citizen health advisory
   - `GU_ADVISORY` — Gujarati translation
   - `STAFF_NOTICE` — Formal VMC enforcement directive
 - Outputs parsed and saved to `data/advisory_output.json`
-- In the dashboard: shown as a styled chat-bubble interface with Copy and Broadcast actions
+- In the dashboard: shown as the **AI Coordinator Console**, a chat-style flow (Municipal Administrator request → Gemini Operations Assistant → Public Safety Advisory) with Copy and Broadcast actions, plus enforcement buffer zones and emergency contact info in the side panel
 
-### 4. Source Attribution — `attribution.py`
+### 5. Source Attribution — `attribution.py`
 - Scores three source categories (**traffic**, **construction**, **industrial**) using inverse-distance weighting from approximate ward coordinates
 - Identifies `dominant_source` and a `confidence_score` (0–100%)
+- **Note:** this is a heuristic proximity-based score, not a trained ML classifier — the dashboard surfaces this distinction directly to keep the attribution transparent
 - Result saved to `data/attribution_output.json` and consumed live by the Advisory and Dashboard pages
 
-### 5. Live AQI Map — `app.py`
+### 6. Live AQI Map — `app.py`
 - Renders a **Folium** interactive map centered on Vadodara
 - Ward markers color-coded by AQI category (Good → Hazardous)
 - **HeatMap layer** showing PM2.5 concentration intensity
+- **AI Spatial Dispatch** panel flagging high particulate density near critical exposure targets (e.g. hospitals) with suppression recommendations
 - Ward-level popups showing AQI value, category, and dominant source
 
-### 6. Dashboard — `app.py`
-- KPI cards: city-wide AQI, dominant source, alert level, wards affected
+### 7. Dashboard — `app.py`
+- KPI cards: current AQI, 24-hour peak forecast, exposed population, AI model confidence
+- Public Risk Index and forecast horizon (+72 hours, with RMSE-based accuracy)
 - 30-day AQI history trend chart (Plotly)
 - Pollution source breakdown donut chart
 - Live weather widget with temperature, humidity, wind, PM2.5, NO₂ readouts
+
+---
+
+## 📸 Screenshots
+
+| Dashboard | Ranked Interventions |
+|---|---|
+| Municipal Digital Twin Control — live KPIs, risk index, forecast horizon | Cost/impact/confidence-ranked municipal action plan |
+
+| Live AQI Map | AI Forecast |
+|---|---|
+| Heatmap + AI Spatial Dispatch near critical exposure zones | Prophet forecast vs persistence baseline, with model error telemetry |
+
+| Intervention Simulator | Health Advisory (AI Coordinator Console) |
+|---|---|
+| Live-adjustable sliders for traffic/construction/industry/green cover | Gemini-generated bilingual advisories and enforcement notices |
+
+*(Add screenshots from `demo/` here before final submission.)*
 
 ---
 
@@ -102,7 +133,7 @@ BreatheAhead/
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-org/BreatheAhead.git
+git clone https://github.com/25032007/BreatheAhead.git
 cd BreatheAhead
 ```
 
@@ -190,13 +221,13 @@ The platform currently covers the following Vadodara wards with ward-specific da
 
 ## 🧪 Model Performance
 
-The Prophet forecast model is benchmarked against a simple persistence baseline (tomorrow = today):
+The Prophet forecast model is benchmarked against a simple persistence baseline (tomorrow = today) on a 10-day held-out test set:
 
-| Metric | Model | Baseline |
+| Metric | AI Prophet Model | Persistence Baseline |
 |---|---|---|
-| RMSE | Evaluated on 10-day holdout | Shift-by-1 AQI |
+| RMSE | **4.33** | 28.94 |
 
-Performance metrics are printed to console on each run of `forecast_model.py` and displayed in the AI Forecast page of the dashboard.
+Lower RMSE confirms high prediction trust relative to the naive baseline. Metrics are printed to console on each run of `forecast_model.py` and displayed live on the AI Forecast page (Model Error Telemetry panel) of the dashboard.
 
 ---
 
@@ -204,9 +235,13 @@ Performance metrics are printed to console on each run of `forecast_model.py` an
 
 Built for **Vadodara Municipal Corporation (VMC)** as part of an AI-powered Smart City initiative.
 
-- **Stack**: Python · Streamlit · Prophet · Gemini AI · Folium · Plotly
-- **Target City**: Vadodara, Gujarat, India
-- **Data Source**: Historical AQI records — Sayajigunj monitoring station
+- **Anjali Mulchandani** — Team Leader
+- **Deepikaben Jinabhai Vala** — Team Member
+- **Janvi Yadav** — Team Member
+
+**Stack**: Python · Streamlit · Prophet · Gemini AI · Folium · Plotly
+**Target City**: Vadodara, Gujarat, India
+**Data Source**: Historical AQI records — Sayajigunj monitoring station
 
 ---
 
