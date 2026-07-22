@@ -11,7 +11,7 @@
 
 - **🔗 GitHub Repo:** https://github.com/25032007/BreatheAhead
 - **🚀 Live Demo:** https://breatheahead-dgq8r2ynqf2qmcnxbrhf7y.streamlit.app/
-- **🎥 Demo Video:** _[add video link here]_
+- **🎥 Demo Video:** [_\[add video link here\]_](https://drive.google.com/file/d/1Zl53loqkBW2YXw98Z78W2wNtw7FcTij9/view?usp=sharing)
 
 ---
 
@@ -244,7 +244,3 @@ Built for **Vadodara Municipal Corporation (VMC)** as part of an AI-powered Smar
 **Data Source**: Historical AQI records — Sayajigunj monitoring station
 
 ---
-
-## 📄 License
-
-This project is intended for municipal and civic use. Please refer to your organization's data governance policy before deploying in a production environment.
